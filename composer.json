@@ -1,0 +1,31 @@
+{
+    "name": "leugin/remote-auth",
+    "description": "laravel remote authentications",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Leugin\\RemoteAuth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Miguel Quevedo",
+            "email": "meqh1992@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "illuminate/support": "^10.48",
+        "illuminate/database": "^10.38",
+        "illuminate/auth": "^10.48"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Leugin\\RemoteAuth\\RemoteAuthServiceProvider"
+            ]
+        }
+    }
+}
