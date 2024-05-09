@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Leugin\RemoteAuth\Dto\Configuration;
 
 class HttpUserProvider implements UserProvider
@@ -32,6 +33,8 @@ class HttpUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
 
+        Log::info("INSTANCE retrieveByToken {$this->configuration->me}");
+
         $response = $this->getRequest($token)
             ->get($this->configuration->me);
 
@@ -52,6 +55,8 @@ class HttpUserProvider implements UserProvider
 
     public function retrieveByCredentials(array $credentials): Model|Collection|Builder|Authenticatable|array|null
     {
+        Log::info("INSTANCE retrieveByCredentials");
+
         $response = $this->getRequest()->post($this->configuration->login, $credentials);
         $id  =  ($response->successful() && isset($data) && $data['data'] && $data['data']['id']) ? $data['data']['id'] : null;
         return $id ? $this->retrieveById($id) : null;
@@ -59,6 +64,8 @@ class HttpUserProvider implements UserProvider
 
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
+        Log::info("INSTANCE validateCredentials");
+
         return !!$this->retrieveByCredentials($credentials);
     }
 
@@ -68,7 +75,7 @@ class HttpUserProvider implements UserProvider
      */
     public function getRequest(?string $authorization = null):PendingRequest
     {
-        $http = Http::timeout($this->configuration->timeout ?? 100);
+        $http = Http::timeout($this->configuration->timeout ?? 1);
         if ($authorization)
             $http->withHeader('authorization', $authorization);
         return $http;
